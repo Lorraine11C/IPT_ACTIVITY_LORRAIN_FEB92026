@@ -1,0 +1,40 @@
+<!-- school/templates/school/course_form.html -->
+
+{% extends 'school/base.html' %}
+
+{% block content %}
+<h1>{% if course %}Edit Course{% else %}Add Course{% endif %}</h1>
+
+<form method="post" class="card p-4">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label">Course Code</label>
+    <input type="text" name="code" class="form-control" value="{{ course.code|default:'' }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Title</label>
+    <input type="text" name="title" class="form-control" value="{{ course.title|default:'' }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Description (optional)</label>
+    <textarea name="description" class="form-control" rows="3">{{ course.description|default:'' }}</textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Teacher</label>
+    <select name="teacher" class="form-select">
+      <option value="">— No teacher assigned —</option>
+      {% for teacher in teachers %}
+        <option value="{{ teacher.id }}"
+          {% if course and course.teacher == teacher %}selected{% endif %}>
+          {{ teacher.name }} {% if teacher.subject_specialty %}({{ teacher.subject_specialty }}){% endif %}
+        </option>
+      {% endfor %}
+    </select>
+    <small class="form-text text-muted">
+      Only teachers without any assigned courses are shown (except current teacher when editing).
+    </small>
+  </div>
+  <button type="submit" class="btn btn-primary">Save</button>
+  <a href="{% url 'course_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

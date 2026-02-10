@@ -1,0 +1,20 @@
+{% extends 'school/base.html' %}
+
+{% block content %}
+<h1>Delete Teacher</h1>
+<div class="alert alert-danger">
+  <p>Are you sure you want to delete <strong>{{ teacher.name }}</strong>?</p>
+  <p>
+    {% if teacher.courses.exists %}
+      This teacher is assigned to {{ teacher.courses.count }} course{{ teacher.courses.count|pluralize }}.
+      Courses will remain but become unassigned.
+    {% endif %}
+  </p>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Yes, Delete</button>
+  <a href="{% url 'teacher_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
